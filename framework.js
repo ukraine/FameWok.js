@@ -111,3 +111,129 @@ function showHideDiv(id) {
    element.style.display = (element.style.display === "none") ? "block" : "none";
 }
 
+
+function doFetch2(id, fieldsToChange, action, processor, statusElementId='status') {
+   const statusElement = document.getElementById(statusElementId);
+   statusElement.style.display = 'block';
+   statusElement.innerHTML = "<span>Processing...</span>";
+
+   // Split the string by the '=' character
+const parts = fieldsToChange.split('=');
+
+const statusValue = parts[1]; // "3"
+
+  // Prepare the data to send
+  const data = new URLSearchParams();
+  data.append('id', id);
+  data.append('fieldsToChange', fieldsToChange);
+  data.append('action', action);
+
+   fetch(processor, {
+       method: 'POST',
+       body: data,
+
+       // action: action
+       /* headers: {
+           // Ensure that the server understands the character encoding
+           'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+       }, */
+   })
+   .then(response => response.json())
+   .then(data => {
+       const message = data.message;
+
+       // statusElement.innerHTML = message + "<div><button onclick='closeDiv(\"status\")'>OK</button></div>";
+       statusElement.classList.add("success");
+
+       document.getElementById(statusElementId).innerHTML = statusValue;
+
+   })
+   .catch(error => {
+       console.error('Error:', error);
+       statusElement.innerHTML = "Error occurred.";
+       statusElement.classList.add("error");
+   });
+}
+
+
+// doAjax 2.0
+function doFetch(i, processor, action, statusElementId='status') {
+   const statusElement = document.getElementById(statusElementId);
+   statusElement.style.display = 'block';
+   statusElement.innerHTML = "<span>Processing...</span>";
+
+   const formData = new FormData(document.forms[i]);
+
+   fetch(processor, {
+       method: 'POST',
+       body: formData,
+       /* headers: {
+           // Ensure that the server understands the character encoding
+           'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+       }, */
+   })
+   .then(response => response.json())
+   .then(data => {
+       const message = data.message;
+
+       statusElement.innerHTML = message + "<div><button onclick='closeDiv(\"status\")'>OK</button></div>";
+       statusElement.classList.add("success");
+
+       document.getElementById("itemStatus" + i).innerHTML = formData.get("cellValue");
+
+       if (action === "hide") {
+           document.getElementById(i).style.display = 'none';
+       }
+   })
+   .catch(error => {
+       console.error('Error:', error);
+       statusElement.innerHTML = "Error occurred.";
+       statusElement.classList.add("error");
+   });
+}
+
+   // Function to filter divs based on the search string
+function filterDivs(classToSearch, blockOrInline, elementType) { 
+
+  // Get the input element
+  var input = document.getElementById('searchInput');
+
+  // Get the value of the input
+  var searchString = input.value.toLowerCase();
+
+  console.log('Search string:', searchString);
+ 
+  // Get all elements of the specified type within the specified class
+  var contentElements = document.querySelectorAll(classToSearch);
+
+  console.log('Number of elements to filter:', contentElements.length);
+ 
+  // Loop through each element
+  contentElements.forEach(function(element) {
+     // Get the text content of the element and convert it to lowercase
+     var elementText = element.textContent.toLowerCase();
+ 
+     // Check if the element contains the search string
+     if (elementText.includes(searchString)) {
+        // If it does, display the element
+        element.style.display = elementType === 'tr' ? '' : blockOrInline;
+     } else {
+        // If it doesn't, hide the element
+        element.style.display = 'none';
+     }
+  });
+}
+
+
+
+   // Function to change the innerText and follow the link
+function changeTextAndFollowLink(element, nameValueCopied) { 
+   // Change the innerText
+   element.innerText = nameValueCopied;
+
+   // Get the href value
+   const hrefValue = element.getAttribute('href');
+
+   // Follow the link
+   window.open(hrefValue, '_blank');
+}
