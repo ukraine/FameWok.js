@@ -34,7 +34,7 @@ async function copyDivContent2(contentId, thisId, copiedStatusMessage) {
 
    // Determine the content to copy: 
    // If the element is a TEXTAREA, get its value; otherwise, get the inner text.
-   var copyText = element.tagName === 'TEXTAREA' ? element.value : element.innerText;
+   var copyText = element.tagName === 'TEXTAREA' ? element.value.trim() : element.innerText.trim();
 
    // Replace any line breaks in the text with newline characters.
    var formattedText = copyText.replace(/\n/g, '\r\n');
