@@ -105,11 +105,18 @@ function closeDiv(id) {
 /// Toggles the visibility of an HTML element between 'block' and 'none'.
 function showHideDiv(id) {
    // Get the element by its ID
-   var element = document.getElementById(id);
+   const element = document.getElementById(id);
    
-   // Toggle the display property: if it's 'none', set it to 'block'; otherwise, set it to 'none'.
-   element.style.display = (element.style.display === "none") ? "block" : "none";
+   // Check if the element exists
+   if (!element) {
+     console.error(`Element with id ${id} not found`);
+     return;
+   }
+   
+   // Toggle the display property: if it's 'none' or empty string, set it to 'block'; otherwise, set it to 'none'.
+   element.style.display = (element.style.display === "none" || element.style.display === "") ? "block" : "none";
 }
+
 
 
 function doFetch2(id, fieldsToChange, action, processor, statusElementId='status') {
